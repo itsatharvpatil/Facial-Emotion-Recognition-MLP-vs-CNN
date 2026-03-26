@@ -41,7 +41,7 @@ presentation/ — Final presentation slides (21 slides)
 
 ```bash
 torch torchvision numpy pandas matplotlib seaborn scikit-learn pillow kaggle
-
+```
 ##How to Reproduce
 
 Clone the repository.

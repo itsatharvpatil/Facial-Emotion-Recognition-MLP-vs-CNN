@@ -45,18 +45,26 @@ torch torchvision numpy pandas matplotlib seaborn scikit-learn pillow kaggle
 ##How to Reproduce
 
 Clone the repository.
+
 Run each notebook end-to-end on Google Colab (T4 GPU recommended).
+
 Every notebook is completely self-contained:
+
 Downloads data automatically
+
 Trains the model
+
 Evaluates on validation/test sets
+
 Saves all plots and results
 
 
 Expected runtimes (T4 GPU):
 
 MLP experiments ≈ 37 min
+
 CNN experiments ≈ 35 min
+
 Full FER+ experiments ≈ 60 min total
 
 All results are fully reproducible with seed=42 where applicable.

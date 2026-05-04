@@ -1,70 +1,101 @@
-# Facial Emotion Recognition: MLP vs CNN and the Role of Label Quality
+# FER-2013+ Emotion Recognition - MLP vs ResMLP vs CNN
 
-**Course:** Machine Learning, IGP-TUBS  
-**Supervisor:** Dr.-Ing. Mehdi Maboudi  
-**Author:** Atharv Patil | M.Sc. Data Science, Technische Universität Braunschweig  
-**Date:** March 2026
+A comprehensive comparison of **MLP**, **ResMLP**, and **CNN** architectures for facial emotion recognition using the **FER-2013+** (cleaned labels) dataset.
 
-## Results
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-| Experiment                          | Test Accuracy |
-|-------------------------------------|---------------|
-| FER-2013 MLP (hard labels)          | 48.57%        |
-| FER-2013 CNN (hard labels)          | 65.59%        |
-| FER+ MLP (soft labels)              | 66.90%        |
-| FER+ CNN (soft labels)              | **82.20%**    |
+## 📊 Results
 
-**Key finding:**  
-Label-quality gain (+18.3 pp on MLP) ≈ Architecture gain (+17.0 pp).  
-**FER+ MLP (66.90 %) outperforms FER-2013 CNN (65.59 %)** — clean labels on a simpler model beat noisy labels on a better model.
+| Model   | Parameters | Test Accuracy | Top-3 Accuracy | Efficiency (Acc/M) | Best Epoch |
+|---------|------------|---------------|----------------|--------------------|------------|
+| **MLP** | 7.52M      | **51.8%**     | 81.2%          | 6.89               | 89         |
+| ResMLP  | 9.20M      | 50.1%         | 81.8%          | 5.45               | 74         |
+| **CNN** | **1.32M**  | **68.7%**     | **92.1%**      | **52.05**          | 52         |
 
-## Repository Structure
+> **CNN achieves ~17% higher accuracy** while using **~6x fewer parameters** than the MLP.
 
-```
-notebooks/   — Jupyter notebooks (1 clean cell each, outputs included)
-report/      — LaTeX source + compiled PDF (9 pages)
-presentation/ — Final presentation slides (21 slides)
-```
+## 🚀 Project Highlights
 
-## Datasets
+- **Cleaned FER-2013+** dataset with better labels
+- Strong data augmentation + **MixUp** (CNN)
+- Proper regularization (BatchNorm, Dropout, Label Smoothing, Weight Decay)
+- OneCycleLR + Cosine Annealing schedulers
+- Detailed training curves, Top-K accuracy, and comprehensive comparison
+- Full reproducibility with Google Drive persistence
 
-- **FER-2013** (images + hard labels)  
-  `kaggle datasets download -d msambare/fer2013`
+## 🧠 Models Compared
 
-- **FER+** (soft labels from 10 annotators)  
-  `git clone https://github.com/microsoft/FERPlus.git`
+### 1. FER_MLP
+- Wide 4-layer fully connected network (4096 → 2048 → 1024)
+- Heavy regularization (Dropout + BatchNorm)
 
-- Raw pixels (alternative download)  
-  `kaggle datasets download -d deadskull7/fer2013`
+### 2. ResMLP
+- MLP with residual blocks for better gradient flow
+- 1024-dim residual pathway
 
-## Requirements
+### 3. EmotionCNN (Best Performer)
+- 3-block CNN (64 → 128 → 256 channels)
+- MixUp augmentation + strong spatial feature learning
+- **Significantly outperforms** both MLP variants
 
-```bash
-torch torchvision numpy pandas matplotlib seaborn scikit-learn pillow kaggle
-```
-##How to Reproduce
+## ✨ Features
 
-Clone the repository.
+- Reproducible training with fixed seeds
+- Class-weighted loss handling imbalance
+- Top-1, Top-2, Top-3 accuracy evaluation
+- Automatic best model saving + training history
+- Beautiful Matplotlib visualizations
+- Google Drive integration for persistence
 
-Run each notebook end-to-end on Google Colab (T4 GPU recommended).
+## 🛠️ How to Run (Step by Step)
 
-Every notebook is completely self-contained:
+### Recommended Order:
 
-Downloads data automatically
+1. **Run `fermlp.ipynb`** → Trains the MLP model
+2. **Run `fercnn.ipynb`** → Trains the CNN model (with MixUp + OneCycleLR)
+3. **Run `fer+cnnmlp.ipynb`** → Runs comparison and generates final visualizations
 
-Trains the model
+> All notebooks automatically save results to Google Drive:  
+> `MyDrive/FER2013_Project/`
 
-Evaluates on validation/test sets
+### Requirements
+- Google Colab with **GPU** runtime (T4 recommended)
+- Kaggle account (for dataset download — handled automatically)
 
-Saves all plots and results
+## ✨ Key Features
+
+- **Cleaned FER-2013+** dataset
+- Strong data augmentation
+- MixUp augmentation in CNN
+- Proper schedulers (`OneCycleLR` for CNN, Cosine for MLP/ResMLP)
+- Class-weighted loss for imbalance handling
+- Top-1, Top-2, Top-3 accuracy
+- Training history + beautiful plots
+- Google Drive persistence
 
 
-Expected runtimes (T4 GPU):
+## 📈 Key Insights (After Training)
 
-MLP experiments ≈ 37 min
+- CNN significantly outperforms both MLP variants due to spatial feature learning.
+- Residual connections in pure MLPs give limited improvement.
+- MixUp + OneCycleLR provides substantial boost to CNN.
 
-CNN experiments ≈ 35 min
+## 📂 Google Drive Output
 
-Full FER+ experiments ≈ 60 min total
+After training, you will find in your Drive:
+- `mlp_best_model.pth`, `resmlp_best_model.pth`, `cnn_best_model.pth`
+- Training curves (`*_training_curves.png`)
+- `three_way_comparison.png`
+- JSON result files
 
-All results are fully reproducible with seed=42 where applicable.
+## 🚀 Future Work
+
+- EfficientNet / MobileNet backbone
+- Model ensemble
+- Real-time webcam demo
+- Confusion matrix analysis
+- Quantization for deployment
+
+---
